@@ -60,11 +60,11 @@ Upon uploading the dataset, the entries are displayed as an interactive
 table, allowing exploration and a better view of the data. The table
 should have the following capabilities:
 
-```
-● Sorting – can sort the data by any column.
-● Filtering – filter Airbnbs by name.
-● Pagination – display ten rows per page, and enable pagination.
-```
+
+- Sorting – can sort the data by any column.
+- Filtering – filter Airbnbs by name.
+- Pagination – display ten rows per page, and enable pagination.
+
 You are required to use the **Tabulator** JS library,allowing easy access to
 all the above.
 
@@ -123,10 +123,10 @@ manager**. You can download **npm** [here](https://docs.npmjs.com/getting-starte
 After you've installed npm you can install the libraries by running the
 following commands from the terminal:
 
-```
-● Tabulator – "npm install tabulator "
-● Leaflet – "npm install leaflet"
-```
+
+- Tabulator – "npm install tabulator "
+- Leaflet – "npm install leaflet"
+
 #### Using the Libraries
 
 These libraries are simple to use and have a lot of online examples.
@@ -138,16 +138,15 @@ features you don’t need to know.
 
 ### Tips and Guidelines
 
-```
-● You can work on each part separately and connect them all at the
+- You can work on each part separately and connect them all at the
 end.
-● Use the given links! Almost everything you need toimplement
+- Use the given links! Almost everything you need toimplement
 becomes easy if you understand how to use the libraries.
-● For parsing CSV files you can use the [PapaParse](https://www.papaparse.com/) library.
-● The single page can be straightforward. Do not waste your time
+- For parsing CSV files you can use the [PapaParse](https://www.papaparse.com/) library.
+- The single page can be straightforward. Do not waste your time
 implementing very complicated control-flow logic.
-● Make sure that your application works in Chrome and Firefox.
-```
+- Make sure that your application works in Chrome and Firefox.
+
 ### Submission
 
 You should submit a zip file named hw3.zip containing the following files:
@@ -158,8 +157,8 @@ You should submit a zip file named hw3.zip containing the following files:
 
 ## Good Luck!
 
-[img01]: https://github.com/Ofir-Shechtman/236369-FullStack-hw3/blob/main/img01.png
-[img02]: https://github.com/Ofir-Shechtman/236369-FullStack-hw3/blob/main/img02.png
-[img03]: https://github.com/Ofir-Shechtman/236369-FullStack-hw3/blob/main/img03.png
-[img04]: https://github.com/Ofir-Shechtman/236369-FullStack-hw3/blob/main/img04.png
+[img01]: readme_images/img01.png
+[img02]: readme_images/img02.png
+[img03]: readme_images/img03.png
+[img04]: readme_images/img04.png
 
