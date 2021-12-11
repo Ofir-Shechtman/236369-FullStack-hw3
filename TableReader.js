@@ -1,8 +1,19 @@
-export function BuildElements(csv_input_id, table_id, map_id) {
+export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id, download_id) {
+    const input_element = document.getElementById(csv_input_id);
     const table_element = document.getElementById(table_id);
+    const map_element = document.getElementById(map_id);
+    const info_element = document.getElementById(info_id);
+    const clear_element = document.getElementById(clear_id);
+    const download_element = document.getElementById(download_id);
     let markers = {}
 
     function handleFile() {
+        input_element.style.display = "none"
+        table_element.style.display = "block"
+        map_element.style.display = "block"
+        info_element.style.display = "block"
+        clear_element.style.display = "block"
+        download_element.style.display = "block"
         const file = this.files[0];
         Papa.parse(file, {
             header: true,
@@ -27,24 +38,23 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 });
                 const first_record = [results.data[0].latitude, results.data[0].longitude];
                 let map = L.map(map_id).setView(first_record, 10);
+
+                function _ParsedRowSelected(row_data, noMoveStart) {
+                    let latlng =L.latLng(row_data.latitude, row_data.longitude)
+                    map.setView(latlng, 15, {noMoveStart:noMoveStart})
+                    markers[latlng.toString()].marker.setIcon(sel_icon)
+                    info_element.innerHTML = JSON.stringify(row_data, undefined, '\t');
+                }
+
                 function _rowSelected(row) {
                     _ParsedRowSelected(row.getData(), true)
                 }
-                function _ParsedRowSelected(row_data, noMoveStart) {
-                    map.setView([row_data.latitude, row_data.longitude], 15, {noMoveStart:noMoveStart})
-                    let latlng =L.latLng(row_data.latitude, row_data.longitude)
-                    markers[latlng.toString()].marker.setIcon(sel_icon)
-                    let popup = L.popup()
-                        .setLatLng(latlng)
-                        .setContent('<p>Hello world!<br />This is a nice popup.</p>')
-                        .openOn(map);
-                })
-                table.on("rowDeselected", function(row) {
-                }
                 table.on("rowSelected", _rowSelected)
+
                 function _rowDeselected(row){
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
                     markers[latlng.toString()].marker.setIcon(not_sel_icon)
+                    info_element.innerHTML = "";
                 }
                 table.on("rowDeselected", _rowDeselected)
 
@@ -57,17 +67,15 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 }
                 function _clickedMapHandler(event) {
                     const table_element = document.getElementById(table_id);
-
                 }
                 function _clickedMarkerHandler(event) {
                     _moveMapHandler(event)
                     let row = markers[event.latlng.toString()].record
                     table.selectRow(parseInt(row["id"]))
                     _ParsedRowSelected(row, false)
-
                 }
                 map.on('click',_clickedMapHandler)
-                map.on('move',_moveMapHandler)
+                map.on('mousedown',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
@@ -83,11 +91,27 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     marker.addTo(map);
                     markers[marker._latlng.toString()] = {marker:marker, record:record}
                     marker.on('click', _clickedMarkerHandler)
-
                 }
-
             }
         });
     }
+    function clearData(){
+        input_element.value = ""
+        input_element.style.display = "block"
+        var table = Tabulator.findTable(table_element)[0];
+        table.clearData()
+        table_element.style.display = "none"
+        map_element.style.display = "none"
+        info_element.innerHTML = ""
+        info_element.style.display = "none"
+        clear_element.style.display = "none"
+        download_element.style.display = "none"
+    }
+
+    function downloadData(){
+        console.log("download")
+    }
     document.getElementById(csv_input_id).addEventListener("change", handleFile, false);
+    document.getElementById(clear_id).addEventListener("click", clearData, false);
+    document.getElementById(download_id).addEventListener("click", downloadData, false);
 }
