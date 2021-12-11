@@ -14,7 +14,7 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     layout:"fitDataStretch",
                     height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
                     pagination: "local",       //paginate the data
-                    paginationSize: 5,       //allow 5 rows per page of data
+                    paginationSize: 10,       //allow 5 rows per page of data
                     columns: [ //Define Table Columns
                         {title: "Name", field: "name", width: 150, headerFilter:"input"},
                         {title: "Host ID", field: "host_id", width: 150},
@@ -30,6 +30,10 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     map.setView([row.getData().latitude, row.getData().longitude], 15, {noMoveStart:true})
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
                     markers[latlng.toString()].marker.setIcon(sel_icon)
+                    let popup = L.popup()
+                        .setLatLng(latlng)
+                        .setContent('<p>Hello world!<br />This is a nice popup.</p>')
+                        .openOn(map);
                 })
                 table.on("rowDeselected", function(row) {
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
@@ -54,7 +58,7 @@ export function BuildElements(csv_input_id, table_id, map_id) {
 
                 }
                 map.on('click',_clickedMapHandler)
-                map.on('move',_moveMapHandler)
+                map.on('mousedown',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
