@@ -1,9 +1,14 @@
+
+
+
+
 export function BuildElements(csv_input_id, table_id, map_id) {
     const table_element = document.getElementById(table_id);
     let markers = {}
 
     function handleFile() {
         const file = this.files[0];
+        const paginationSize = 10
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
@@ -15,7 +20,7 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     layout:"fitDataStretch",
                     height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
                     pagination: "local",       //paginate the data
-                    paginationSize: 5,       //allow 5 rows per page of data
+                    paginationSize: paginationSize,       //allow 5 rows per page of data
                     columns: [ //Define Table Columns
                         {title: "Name", field: "name", width: 150, headerFilter:"input"},
                         {title: "Host ID", field: "host_id", width: 150},
@@ -31,10 +36,13 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     _ParsedRowSelected(row.getData(), true)
                 }
                 function _ParsedRowSelected(row_data, noMoveStart) {
-                    map.setView([row_data.latitude, row_data.longitude], 15, {noMoveStart:noMoveStart})
+                    table.selectRow(parseInt(row_data['id']))
+                    map.flyTo([row_data.latitude, row_data.longitude],15,{noMoveStart:true})
                     let latlng =L.latLng(row_data.latitude, row_data.longitude)
                     markers[latlng.toString()].marker.setIcon(sel_icon)
                 }
+
+
                 table.on("rowSelected", _rowSelected)
                 function _rowDeselected(row){
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
@@ -54,14 +62,21 @@ export function BuildElements(csv_input_id, table_id, map_id) {
 
                 }
                 function _clickedMarkerHandler(event) {
+                    let id = markers[event.latlng.toString()].record["id"]
+                    let row = table.getRow(id)
+                    let selected = table.getSelectedRows()
+                    let same_marker = selected.length>0 && row === selected[0]
                     _moveMapHandler(event)
-                    let row = markers[event.latlng.toString()].record
-                    table.selectRow(parseInt(row["id"]))
-                    _ParsedRowSelected(row, false)
+                    if (same_marker) return;
+                    table.setPage(parseInt(row.getPosition(true)/paginationSize+1))
+                    table.selectRow(parseInt(id))
+                    // _ParsedRowSelected(row.getData(), true)
+
+
 
                 }
                 map.on('click',_clickedMapHandler)
-                map.on('mousedown',_moveMapHandler)
+                map.on('movestart',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
