@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabulator Example</title>
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <script src="./papaparse/papaparse.js"></script>
+</head>
+
+<body>
+<input type="file" id="input">
+<div id="example-table"></div>
+<script>
+    console.log("Start")
+    var table = new Tabulator("#example-table", {
+        height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+        layout:"fitColumns", //fit columns to width of table (optional)
+        columns:[ //Define Table Columns
+            {title:"Name", field:"name", width:150},
+        ],
+    });
+    function handleFile() {
+        var csvData=[];
+//create Tabulator on DOM element with id "example-table"
+
+        const file = this.files[0];
+        Papa.parse(file, {
+            header: true,
+            step: function(result) {
+                csvData.push(result.data)
+            },
+            complete: function(results, file) {
+                console.log('Complete', csvData.length, 'records.');
+                console.log(csvData)
+                table.setData(csvData);
+            }
+        });
+    }
+    document.getElementById("input").addEventListener("change", handleFile, false);
+</script>
+</body>
+
+</html>
