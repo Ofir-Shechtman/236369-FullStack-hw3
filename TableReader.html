@@ -7,39 +7,26 @@
     <title>Tabulator Example</title>
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-    <script src="./papaparse/papaparse.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/papaparse/papaparse.min.js"></script>
+<!--    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>-->
+<!--    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>-->
+    <link rel="stylesheet" href="./leaflet/leaflet.css"/>
+    <script src="./leaflet/leaflet.js"></script>
+
 </head>
 
 <body>
-<input type="file" id="input">
-<div id="example-table"></div>
-<script>
-    console.log("Start")
-    var table = new Tabulator("#example-table", {
-        height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-        layout:"fitColumns", //fit columns to width of table (optional)
-        columns:[ //Define Table Columns
-            {title:"Name", field:"name", width:150},
-        ],
-    });
-    function handleFile() {
-        var csvData=[];
-//create Tabulator on DOM element with id "example-table"
+<input type="file" id="input" accept=".csv">
+<div id="table"></div>
+<div id="mapid" style="width: 600px; height: 400px;"></div>
 
-        const file = this.files[0];
-        Papa.parse(file, {
-            header: true,
-            step: function(result) {
-                csvData.push(result.data)
-            },
-            complete: function(results, file) {
-                console.log('Complete', csvData.length, 'records.');
-                console.log(csvData)
-                table.setData(csvData);
-            }
-        });
-    }
-    document.getElementById("input").addEventListener("change", handleFile, false);
+<script type="module">
+    import {BuildTable} from "./TableReader.js";
+    BuildTable("input", "table")
+
+
+
+
 </script>
 </body>
 
