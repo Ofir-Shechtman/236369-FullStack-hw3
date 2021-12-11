@@ -23,23 +23,26 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     ],
                 });
                 const first_record = [results.data[0].latitude, results.data[0].longitude]
-                let mymap = L.map('mapid').setView(first_record, 10);
+                let map = L.map(map_id).setView(first_record, 10);
+                table.on("rowClick", function(e, row) {
+                    map.setView([row.getData().latitude, row.getData().longitude], 15)
+                })
                 function _moveMapHandler(event) {
                     console.log("moveMapHandler")
-                    var selectedData = table.getSelectedRows()
-                    console.log(selectedData[0].getIndex())
-                    if (selectedData.length>0) {
-                        selectedData[0].deselect()
-                        table.deselectRows("all");
-                    }
+                    // var selectedData = table.getSelectedRows()
+                    // console.log(selectedData[0].getIndex())
+                    // if (selectedData.length>0) {
+                    //     selectedData[0].deselect()
+                    //     table.deselectRows("all");
+                    // }
                 }
                 function _clickedMapHandler(event) {
                     console.log("clickedMapHandler")
                     const table_element = document.getElementById(table_id);
 
                 }
-                mymap.on('click',_clickedMapHandler)
-                mymap.on('move',_moveMapHandler)
+                map.on('click',_clickedMapHandler)
+                map.on('move',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
@@ -47,15 +50,14 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     tileSize: 512,
                     zoomOffset: -1,
                     accessToken: 'pk.eyJ1Ijoib2ZpcjUxMTk5NiIsImEiOiJja3d6YmNzeG4wdXgxMm91cnQ4Y3NicWFuIn0.ajaFrHOpgyqznPKfD3cpJw'
-                }).addTo(mymap);
+                }).addTo(map);
 
-                table.on("rowClick", function(e, row){
-                    mymap.setView([row.getData().latitude, row.getData().longitude],13)
-                });
-                }).addTo(mymap);
+
+
                 for (const record of results.data) {
-                    L.marker([record.latitude, record.longitude]).addTo(mymap);
+                    L.marker([record.latitude, record.longitude]).addTo(map);
                 }
+
             }
         });
     }
