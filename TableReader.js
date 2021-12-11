@@ -5,6 +5,8 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     const info_element = document.getElementById(info_id);
     const clear_element = document.getElementById(clear_id);
     const download_element = document.getElementById(download_id);
+    let cur_loc = undefined;
+    let mouseup = undefined;
     let markers = {}
 
     function handleFile() {
@@ -75,19 +77,34 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
                 function _clickedMarkerHandler(event) {
                     let id = markers[event.latlng.toString()].record["id"]
                     let row = table.getRow(id)
-                    let selected = table.getSelectedRows()
-                    let same_marker = selected.length>0 && row === selected[0]
+                    let same_marker = row === mouseup
                     _moveMapHandler(event)
                     if (same_marker) return;
                     table.setPage(parseInt(row.getPosition(true)/paginationSize+1))
                     table.selectRow(parseInt(id))
-                    // _ParsedRowSelected(row.getData(), true)
 
 
 
                 }
+                function _mouseDown(event) {
+                    cur_loc = map.getCenter()
+                }
+                function _mouseUp(event) {
+                    let selected = table.getSelectedRows()
+                    if(selected.length>0){
+                        mouseup=selected[0]
+                    }
+                    else{
+                        mouseup=undefined
+                    }
+                    if (map.getCenter().lat !== cur_loc.lat || map.getCenter().lng !== cur_loc.lng){
+                        _moveMapHandler(event)
+                    }
+                }
                 map.on('click',_clickedMapHandler)
-                map.on('movestart',_moveMapHandler)
+                map.on('mousedown',_mouseDown)
+                map.on('mouseup',_mouseUp)
+                // map.on('movestart',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
