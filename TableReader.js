@@ -27,11 +27,13 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 const first_record = [results.data[0].latitude, results.data[0].longitude];
                 let map = L.map(map_id).setView(first_record, 10);
                 table.on("rowSelected", function(row) {
-                    map.setView([row.getData().latitude, row.getData().longitude], 15)
-                    markers[row.getData().id].setIcon(sel_icon)
+                    map.setView([row.getData().latitude, row.getData().longitude], 15, {noMoveStart:true})
+                    let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
+                    markers[latlng.toString()].marker.setIcon(sel_icon)
                 })
                 table.on("rowDeselected", function(row) {
-                    markers[row.getData().id].setIcon(not_sel_icon)
+                    let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
+                    markers[latlng.toString()].marker.setIcon(not_sel_icon)
                 })
                 function _moveMapHandler(event) {
                     console.log("moveMapHandler")
@@ -47,7 +49,7 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 }
                 function _clickedMarkerHandler(event) {
                     console.log(event.latlng);
-                    console.log(markers[(event.latlng.lat, event.latlng.lng)].record.get(''))
+                    // console.log(markers[event.latlng.toString()].record.get(''))
                     table.selectRow(48211);
 
                 }
@@ -64,9 +66,9 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 var sel_icon = L.icon({iconUrl: 'icons/marker_sel.png'})
                 var not_sel_icon = L.icon({iconUrl: 'icons/marker_not_sel.png', iconSize: [32, 32]})
                 for (const record of results.data) {
-                    let marker = L.marker([record.latitude, record.longitude], {title:record.name, riseOnHover:true});
+                    let marker = L.marker([record.latitude, record.longitude], {title:record.name, riseOnHover:true, icon:not_sel_icon});
                     marker.addTo(map);
-                    markers[(record.latitude, record.longitude)] = {marker:marker, record:record}
+                    markers[marker._latlng.toString()] = {marker:marker, record:record}
                     marker.on('click', _clickedMarkerHandler)
 
                 }
