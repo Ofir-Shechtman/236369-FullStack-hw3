@@ -75,7 +75,7 @@ _ID_ , _neighborhood_ , _room type_ , and _price_.
 #### Maps
 
 Now, we want to use visual geographic information to view the Airbnbs.
-For this part, you will use **Leaflet** , a JS libraryfor mapping and
+For this part, you will use **Leaflet** , a JS library for mapping and
 geo-information.
 
 
@@ -91,7 +91,7 @@ user moves the map.
 ![alt text][img04]
 
 
-To display the map you will need to use [_mapbox_](https://www.mapbox.com/) whichhas a free maps
+To display the map you will need to use [_mapbox_](https://www.mapbox.com/) which has a free maps
 API. You need to create a _mapbox_ account to get an [access token](https://docs.mapbox.com/help/glossary/access-token/) which
 you will use in your Javascript code.
 
@@ -140,7 +140,7 @@ features you don’t need to know.
 
 - You can work on each part separately and connect them all at the
 end.
-- Use the given links! Almost everything you need toimplement
+- Use the given links! Almost everything you need to implement
 becomes easy if you understand how to use the libraries.
 - For parsing CSV files you can use the [PapaParse](https://www.papaparse.com/) library.
 - The single page can be straightforward. Do not waste your time
