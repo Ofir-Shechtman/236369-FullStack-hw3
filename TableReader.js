@@ -10,6 +10,7 @@ export function BuildElements(csv_input_id, table_id, map_id) {
             complete: function (results, file) {
                 let table = new Tabulator(table_element, {
                     data: results.data,
+                    index: "id",
                     selectable:1,
                     layout:"fitDataStretch",
                     height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
@@ -26,9 +27,12 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 });
                 const first_record = [results.data[0].latitude, results.data[0].longitude];
                 let map = L.map(map_id).setView(first_record, 10);
-                table.on("rowSelected", function(row) {
-                    map.setView([row.getData().latitude, row.getData().longitude], 15, {noMoveStart:true})
-                    let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
+                function _rowSelected(row) {
+                    _ParsedRowSelected(row.getData(), true)
+                }
+                function _ParsedRowSelected(row_data, noMoveStart) {
+                    map.setView([row_data.latitude, row_data.longitude], 15, {noMoveStart:noMoveStart})
+                    let latlng =L.latLng(row_data.latitude, row_data.longitude)
                     markers[latlng.toString()].marker.setIcon(sel_icon)
                     let popup = L.popup()
                         .setLatLng(latlng)
@@ -36,29 +40,34 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                         .openOn(map);
                 })
                 table.on("rowDeselected", function(row) {
+                }
+                table.on("rowSelected", _rowSelected)
+                function _rowDeselected(row){
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
                     markers[latlng.toString()].marker.setIcon(not_sel_icon)
-                })
+                }
+                table.on("rowDeselected", _rowDeselected)
+
                 function _moveMapHandler(event) {
-                    console.log("moveMapHandler")
                     var selectedData = table.getSelectedRows()
                     if (selectedData.length>0) {
                         table.deselectRow()
+                        _rowDeselected(selectedData[0])
                     }
                 }
                 function _clickedMapHandler(event) {
-                    console.log("clickedMapHandler")
                     const table_element = document.getElementById(table_id);
 
                 }
                 function _clickedMarkerHandler(event) {
-                    console.log(event.latlng);
-                    // console.log(markers[event.latlng.toString()].record.get(''))
-                    table.selectRow(48211);
+                    _moveMapHandler(event)
+                    let row = markers[event.latlng.toString()].record
+                    table.selectRow(parseInt(row["id"]))
+                    _ParsedRowSelected(row, false)
 
                 }
                 map.on('click',_clickedMapHandler)
-                map.on('mousedown',_moveMapHandler)
+                map.on('move',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
