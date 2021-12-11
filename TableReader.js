@@ -1,12 +1,19 @@
-
-
-
-
-export function BuildElements(csv_input_id, table_id, map_id) {
+export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id, download_id) {
+    const input_element = document.getElementById(csv_input_id);
     const table_element = document.getElementById(table_id);
+    const map_element = document.getElementById(map_id);
+    const info_element = document.getElementById(info_id);
+    const clear_element = document.getElementById(clear_id);
+    const download_element = document.getElementById(download_id);
     let markers = {}
 
     function handleFile() {
+        input_element.style.display = "none"
+        table_element.style.display = "block"
+        map_element.style.display = "block"
+        info_element.style.display = "block"
+        clear_element.style.display = "block"
+        download_element.style.display = "block"
         const file = this.files[0];
         const paginationSize = 10
         Papa.parse(file, {
@@ -32,21 +39,26 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 });
                 const first_record = [results.data[0].latitude, results.data[0].longitude];
                 let map = L.map(map_id).setView(first_record, 10);
-                function _rowSelected(row) {
-                    _ParsedRowSelected(row.getData(), true)
-                }
+
                 function _ParsedRowSelected(row_data, noMoveStart) {
                     table.selectRow(parseInt(row_data['id']))
                     map.flyTo([row_data.latitude, row_data.longitude],15,{noMoveStart:true})
                     let latlng =L.latLng(row_data.latitude, row_data.longitude)
                     markers[latlng.toString()].marker.setIcon(sel_icon)
+                    info_element.innerHTML = JSON.stringify(row_data, undefined, '\t');
+                }
+
+                function _rowSelected(row) {
+                    _ParsedRowSelected(row.getData(), true)
                 }
 
 
                 table.on("rowSelected", _rowSelected)
+
                 function _rowDeselected(row){
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
                     markers[latlng.toString()].marker.setIcon(not_sel_icon)
+                    info_element.innerHTML = "";
                 }
                 table.on("rowDeselected", _rowDeselected)
 
@@ -59,7 +71,6 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                 }
                 function _clickedMapHandler(event) {
                     const table_element = document.getElementById(table_id);
-
                 }
                 function _clickedMarkerHandler(event) {
                     let id = markers[event.latlng.toString()].record["id"]
@@ -92,11 +103,27 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     marker.addTo(map);
                     markers[marker._latlng.toString()] = {marker:marker, record:record}
                     marker.on('click', _clickedMarkerHandler)
-
                 }
-
             }
         });
     }
+    function clearData(){
+        input_element.value = ""
+        input_element.style.display = "block"
+        var table = Tabulator.findTable(table_element)[0];
+        table.clearData()
+        table_element.style.display = "none"
+        map_element.style.display = "none"
+        info_element.innerHTML = ""
+        info_element.style.display = "none"
+        clear_element.style.display = "none"
+        download_element.style.display = "none"
+    }
+
+    function downloadData(){
+        console.log("download")
+    }
     document.getElementById(csv_input_id).addEventListener("change", handleFile, false);
+    document.getElementById(clear_id).addEventListener("click", clearData, false);
+    document.getElementById(download_id).addEventListener("click", downloadData, false);
 }

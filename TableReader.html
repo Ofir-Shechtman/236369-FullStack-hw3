@@ -17,12 +17,16 @@
 
 <body>
 <input type="file" id="input" accept=".csv">
+<button id="clear" style="display: none;">Clear</button>
+<button id="download_data" style="display: none;">Download Data</button>
 <div id="table"></div>
-<div id="map" style="width: 600px; height: 400px;"></div>
+<div id="map" style="width: 1890px; height: 400px;"></div>
+<pre><code id="info"></code></pre>
+
 
 <script type="module">
     import {BuildElements} from "./TableReader.js";
-    BuildElements("input", "table","map")
+    BuildElements("input", "table","map", "info", "clear", "download_data")
 
 
 
