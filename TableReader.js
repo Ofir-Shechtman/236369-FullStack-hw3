@@ -24,10 +24,14 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                         {title: "Price", field: "price", width: 150},
                     ],
                 });
-                const first_record = [results.data[0].latitude, results.data[0].longitude]
+                const first_record = [results.data[0].latitude, results.data[0].longitude];
                 let map = L.map(map_id).setView(first_record, 10);
-                table.on("rowClick", function(e, row) {
-                    map.setView([row.getData().latitude, row.getData().longitude], 15, {noMoveStart:true})
+                table.on("rowSelected", function(row) {
+                    map.setView([row.getData().latitude, row.getData().longitude], 15)
+                    markers[row.getData().id].setIcon(sel_icon)
+                })
+                table.on("rowDeselected", function(row) {
+                    markers[row.getData().id].setIcon(not_sel_icon)
                 })
                 function _moveMapHandler(event) {
                     console.log("moveMapHandler")
@@ -48,7 +52,7 @@ export function BuildElements(csv_input_id, table_id, map_id) {
 
                 }
                 map.on('click',_clickedMapHandler)
-                map.on('mousedown',_moveMapHandler)
+                map.on('move',_moveMapHandler)
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     maxZoom: 18,
@@ -57,8 +61,8 @@ export function BuildElements(csv_input_id, table_id, map_id) {
                     zoomOffset: -1,
                     accessToken: 'pk.eyJ1Ijoib2ZpcjUxMTk5NiIsImEiOiJja3d6YmNzeG4wdXgxMm91cnQ4Y3NicWFuIn0.ajaFrHOpgyqznPKfD3cpJw'
                 }).addTo(map);
-
-
+                var sel_icon = L.icon({iconUrl: 'icons/marker_sel.png'})
+                var not_sel_icon = L.icon({iconUrl: 'icons/marker_not_sel.png', iconSize: [32, 32]})
                 for (const record of results.data) {
                     let marker = L.marker([record.latitude, record.longitude], {title:record.name, riseOnHover:true});
                     marker.addTo(map);
