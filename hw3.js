@@ -12,7 +12,7 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         selectable:1,
         downloadRowRange: "all",
         layout:"fitDataStretch",
-        height: 205,
+        height: 300,
         pagination: "local",
         paginationSize: paginationSize,
         columns: [
