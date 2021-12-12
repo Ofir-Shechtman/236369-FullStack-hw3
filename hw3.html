@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <style>
+        #dropZone {
+            margin: auto;
+            text-align: center;
+            padding: 70px 0;
+            width: 50%;
+            border: 3px solid green;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airbnb Locations</title>
@@ -13,7 +22,7 @@
 </head>
 
 <body>
-<input type="file" id="input" style="visibility: visible" accept=".csv">
+<div id="dropZone" style="display: block;">Upload File</div>
 <button id="clear" style="visibility: hidden;">Clear</button>
 <a id="download_data" download style="visibility: hidden;"><button>Download Data</button></a>
 <div id="table" style="visibility: hidden;"></div>
@@ -23,10 +32,7 @@
 
 <script type="module">
     import {BuildElements} from "./hw3.js";
-    BuildElements("input", "table","map", "info", "clear", "download_data")
-
-
-
+    BuildElements("dropZone", "table","map", "info", "clear", "download_data")
 </script>
 </body>
 
