@@ -5,6 +5,7 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     const info_element = document.getElementById(info_id);
     const clear_element = document.getElementById(clear_id);
     const download_element = document.getElementById(download_id);
+    let objectURL;
     const paginationSize = 10
     let table = new Tabulator(table_element, {
         // data: results.data,
@@ -47,6 +48,18 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         clear_element.style.visibility = "visible"
         download_element.style.visibility = "visible"
         const file = this.files[0];
+
+
+        if (objectURL) {
+            // revoke the old object url to avoid using more memory than needed
+            URL.revokeObjectURL(objectURL);
+        }
+
+        objectURL = URL.createObjectURL(file);
+
+        download_element.href = objectURL;
+        download_element.download = file.name; // this name is used when the user downloads the file
+
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
