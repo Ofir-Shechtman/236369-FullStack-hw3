@@ -2,20 +2,27 @@
 <html lang="en">
 
 <head>
+    <style>
+        #dropZone {
+            margin: auto;
+            text-align: center;
+            padding: 70px 0;
+            width: 50%;
+            border: 3px solid green;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airbnb Locations</title>
-    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_simple.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/papaparse/papaparse.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="hw3_design.css">
-
+    <link href="https://unpkg.com/tabulator-tables@5.0.7/dist/css/tabulator_simple.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.0.7/dist/js/tabulator.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/papaparse@5.3.1/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 
 <body>
-<input type="file" id="input" style="visibility: visible" accept=".csv">
+<div id="dropZone" style="display: block;">Upload File</div>
 <button id="clear" style="visibility: hidden;">Clear</button>
 <a id="download_data" download style="visibility: hidden;"><button id="download_data_button"> Download Data</button></a>
 <div id="table" style="visibility: hidden;"></div>
@@ -23,12 +30,10 @@
 <pre><code id="info"></code></pre>
 
 
-
 <script type="module">
     import {BuildElements} from "./hw3.js";
-    BuildElements("input", "table","map", "info", "clear", "download_data")
+    BuildElements("dropZone", "table","map", "info", "clear", "download_data")
 </script>
-
 </body>
 
 </html>

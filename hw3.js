@@ -38,16 +38,16 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     var not_sel_icon = L.icon({iconUrl: 'icons/marker_not_sel.png', iconSize: [32, 32]})
 
 
-    function handleFile() {
+    function handleFile(file) {
         let cur_loc = undefined;
         let mouseup = undefined;
-        input_element.style.visibility = "hidden"
+        input_element.style.display = "none"
         table_element.style.visibility = "visible"
         map_element.style.visibility = "visible"
         info_element.style.visibility = "visible"
         clear_element.style.visibility = "visible"
         download_element.style.visibility = "visible"
-        const file = this.files[0];
+        // const file = this.files[0];
 
 
         if (objectURL) {
@@ -135,7 +135,7 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     }
     function clearData(){
         input_element.value = ""
-        input_element.style.visibility = "visible"
+        input_element.style.display = "block"
         table.clearData()
         table_element.style.visibility = "hidden"
         map_element.style.visibility = "hidden"
@@ -146,7 +146,17 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         download_element.style.visibility = "hidden"
     }
 
-
-    document.getElementById(csv_input_id).addEventListener("change", handleFile, false);
-    document.getElementById(clear_id).addEventListener("click", clearData, false);
+    // input_element.addEventListener("change", handleFile, false);
+    input_element.addEventListener('dragover', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+    });
+    input_element.addEventListener('drop', function (e){
+        e.stopPropagation();
+        e.preventDefault();
+        var file = e.dataTransfer.files[0];
+        handleFile(file);
+    });
+    clear_element.addEventListener("click", clearData, false);
 }
