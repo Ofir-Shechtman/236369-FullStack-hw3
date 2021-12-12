@@ -5,53 +5,54 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     const info_element = document.getElementById(info_id);
     const clear_element = document.getElementById(clear_id);
     const download_element = document.getElementById(download_id);
-    let cur_loc = undefined;
-    let mouseup = undefined;
-    let markers = {}
+    const paginationSize = 10
+    let table = new Tabulator(table_element, {
+        // data: results.data,
+        index: "id",
+        selectable:1,
+        layout:"fitDataStretch",
+        height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+        pagination: "local",       //paginate the data
+        paginationSize: paginationSize,       //allow 5 rows per page of data
+        columns: [ //Define Table Columns
+            {title: "Name", field: "name", width: 150, headerFilter:"input"},
+            {title: "Host ID", field: "host_id", width: 150},
+            {title: "ID", field: "id", width: 150},
+            {title: "Neighborhood", field: "neighbourhood", width: 150},
+            {title: "Room Type", field: "room_type", width: 150},
+            {title: "Price", field: "price", width: 150},
+        ],
+    });
+    let map = L.map(map_id)
+
 
     function handleFile() {
-        input_element.style.display = "none"
-        table_element.style.display = "block"
-        map_element.style.display = "block"
-        info_element.style.display = "block"
-        clear_element.style.display = "block"
-        download_element.style.display = "block"
+        let cur_loc = undefined;
+        let mouseup = undefined;
+        let markers = {}
+        input_element.style.visibility = "hidden"
+        table_element.style.visibility = "visible"
+        map_element.style.visibility = "visible"
+        info_element.style.visibility = "visible"
+        clear_element.style.visibility = "visible"
+        download_element.style.visibility = "visible"
         const file = this.files[0];
-        const paginationSize = 10
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
             complete: function (results, file) {
-                let table = new Tabulator(table_element, {
-                    data: results.data,
-                    index: "id",
-                    selectable:1,
-                    layout:"fitDataStretch",
-                    height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-                    pagination: "local",       //paginate the data
-                    paginationSize: paginationSize,       //allow 5 rows per page of data
-                    columns: [ //Define Table Columns
-                        {title: "Name", field: "name", width: 150, headerFilter:"input"},
-                        {title: "Host ID", field: "host_id", width: 150},
-                        {title: "ID", field: "id", width: 150},
-                        {title: "Neighborhood", field: "neighbourhood", width: 150},
-                        {title: "Room Type", field: "room_type", width: 150},
-                        {title: "Price", field: "price", width: 150},
-                    ],
-                });
+                table.setData(results.data)
                 const first_record = [results.data[0].latitude, results.data[0].longitude];
-                let map = L.map(map_id).setView(first_record, 10);
+                map.setView(first_record, 10);
 
-                function _ParsedRowSelected(row_data, noMoveStart) {
-                    table.selectRow(parseInt(row_data['id']))
-                    map.flyTo([row_data.latitude, row_data.longitude],15,{noMoveStart:true})
-                    let latlng =L.latLng(row_data.latitude, row_data.longitude)
-                    markers[latlng.toString()].marker.setIcon(sel_icon)
-                    info_element.innerHTML = JSON.stringify(row_data, undefined, '\t');
-                }
 
                 function _rowSelected(row) {
-                    _ParsedRowSelected(row.getData(), true)
+                    table.selectRow(parseInt(row.getData()['id']))
+                    table.scrollToRow(row.getIndex(), "center", true);
+                    map.flyTo([row.getData().latitude, row.getData().longitude],15,{noMoveStart:true})
+                    let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
+                    markers[latlng.toString()].marker.setIcon(sel_icon)
+                    info_element.innerHTML = JSON.stringify(row.getData(), undefined, '\t');
                 }
 
 
@@ -71,9 +72,7 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
                         _rowDeselected(selectedData[0])
                     }
                 }
-                function _clickedMapHandler(event) {
-                    const table_element = document.getElementById(table_id);
-                }
+
                 function _clickedMarkerHandler(event) {
                     let id = markers[event.latlng.toString()].record["id"]
                     let row = table.getRow(id)
@@ -101,7 +100,6 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
                         _moveMapHandler(event)
                     }
                 }
-                map.on('click',_clickedMapHandler)
                 map.on('mousedown',_mouseDown)
                 map.on('mouseup',_mouseUp)
                 // map.on('movestart',_moveMapHandler)
@@ -126,15 +124,16 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     }
     function clearData(){
         input_element.value = ""
-        input_element.style.display = "block"
+        input_element.style.visibility = "visible"
         var table = Tabulator.findTable(table_element)[0];
         table.clearData()
-        table_element.style.display = "none"
-        map_element.style.display = "none"
+        table_element.style.visibility = "hidden"
+        map_element.style.visibility = "hidden"
         info_element.innerHTML = ""
-        info_element.style.display = "none"
-        clear_element.style.display = "none"
-        download_element.style.display = "none"
+        info_element.style.visibility = "hidden"
+        clear_element.style.visibility = "hidden"
+        download_element.style.visibility = "hidden"
+        //BuildElements(csv_input_id, table_id, map_id, info_id, clear_id, download_id)
     }
 
     function downloadData(){
