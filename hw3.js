@@ -71,7 +71,9 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
                     map.flyTo(latlng,15,{noMoveStart:true})
                     markers[latlng.toString()].marker.setIcon(sel_icon)
-                    info_element.innerHTML = JSON.stringify(row.getData(), undefined, '\t');
+                    let strung = JSON.stringify(row.getData(), undefined, '\t');
+                    info_element.innerHTML = strung.substring(1,strung.length-1);
+
                 }
 
                 function _rowDeselected(row){
