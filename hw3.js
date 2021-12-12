@@ -146,13 +146,14 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         download_element.style.visibility = "hidden"
     }
 
-    // input_element.addEventListener("change", handleFile, false);
     input_element.addEventListener('dragover', function(e) {
         e.stopPropagation();
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
+        input_element.style.background = '#c3d9a0';
     });
     input_element.addEventListener('drop', function (e){
+        input_element.style.background = '#fcfcfc';
         e.stopPropagation();
         e.preventDefault();
         var file = e.dataTransfer.files[0];

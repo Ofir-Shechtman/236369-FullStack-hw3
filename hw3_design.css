@@ -1,3 +1,13 @@
+body {
+    background-color: #eee;
+    color: #222;
+    font-size: 16px;
+    height: 100%;
+    line-height: 1.5em;
+    margin: 0;
+    min-width: 768px;
+}
+
 #input {
     position: fixed;
     top: 50%;
@@ -15,6 +25,7 @@
     transition-duration: 0.4s;
 }
 #clear {
+    background: #fcfcfc;
     border: 2px solid orangered;
     color: orangered;
 }
@@ -23,6 +34,7 @@
     color: white;
 }
 #download_data_button {
+    background: #fcfcfc;
     border: 2px solid dodgerblue;
     color: dodgerblue;
 }
@@ -39,6 +51,14 @@
     width: 75%;
     height: 400px
 }
+#dropZone {
+    background: #fcfcfc;
+    border: 3px solid #e3e3e3;
+    padding: 30px;
+    text-align: center;
+    width: 35%;
+    margin: 0 0 20px;
+}
 #info {
     position:absolute;
     right:0;
@@ -46,11 +66,4 @@
     width: 25%;
     font-size: 16px;
 
-}
-#dropZone {
-    margin: auto;
-    text-align: center;
-    padding: 70px 0;
-    width: 50%;
-    border: 3px solid green;
 }
