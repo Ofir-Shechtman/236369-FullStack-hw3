@@ -24,6 +24,16 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         ],
     });
     let map = L.map(map_id)
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1Ijoib2ZpcjUxMTk5NiIsImEiOiJja3d6YmNzeG4wdXgxMm91cnQ4Y3NicWFuIn0.ajaFrHOpgyqznPKfD3cpJw'
+    }).addTo(map);
+    var markers_group = L.layerGroup();
+
 
 
     function handleFile() {
@@ -103,22 +113,16 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
                 map.on('mousedown',_mouseDown)
                 map.on('mouseup',_mouseUp)
                 // map.on('movestart',_moveMapHandler)
-                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    maxZoom: 18,
-                    id: 'mapbox/streets-v11',
-                    tileSize: 512,
-                    zoomOffset: -1,
-                    accessToken: 'pk.eyJ1Ijoib2ZpcjUxMTk5NiIsImEiOiJja3d6YmNzeG4wdXgxMm91cnQ4Y3NicWFuIn0.ajaFrHOpgyqznPKfD3cpJw'
-                }).addTo(map);
+
                 var sel_icon = L.icon({iconUrl: 'icons/marker_sel.png'})
                 var not_sel_icon = L.icon({iconUrl: 'icons/marker_not_sel.png', iconSize: [32, 32]})
                 for (const record of results.data) {
                     let marker = L.marker([record.latitude, record.longitude], {title:record.name, riseOnHover:true, icon:not_sel_icon});
-                    marker.addTo(map);
+                    markers_group.addLayer(marker)
                     markers[marker._latlng.toString()] = {marker:marker, record:record}
                     marker.on('click', _clickedMarkerHandler)
                 }
+                map.addLayer(markers_group);
             }
         });
     }
@@ -129,6 +133,7 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         table.clearData()
         table_element.style.visibility = "hidden"
         map_element.style.visibility = "hidden"
+        markers_group.clearLayers();
         info_element.innerHTML = ""
         info_element.style.visibility = "hidden"
         clear_element.style.visibility = "hidden"
