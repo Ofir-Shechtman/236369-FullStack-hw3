@@ -10,24 +10,25 @@
     <script type="text/javascript" src="https://unpkg.com/papaparse/papaparse.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="hw3_design.css">
+
 </head>
 
 <body>
 <input type="file" id="input" style="visibility: visible" accept=".csv">
 <button id="clear" style="visibility: hidden;">Clear</button>
-<a id="download_data" download style="visibility: hidden;"><button>Download Data</button></a>
+<a id="download_data" download style="visibility: hidden;"><button id="download_data_button"> Download Data</button></a>
 <div id="table" style="visibility: hidden;"></div>
-<div id="map" style="width: 1000px; height: 400px; visibility: hidden;"></div>
+<div id="map" style="visibility: hidden;"></div>
 <pre><code id="info"></code></pre>
+
 
 
 <script type="module">
     import {BuildElements} from "./hw3.js";
     BuildElements("input", "table","map", "info", "clear", "download_data")
-
-
-
 </script>
+
 </body>
 
 </html>

@@ -146,10 +146,7 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         download_element.style.visibility = "hidden"
     }
 
-    function downloadData(){
-        table.download("csv", "data.csv");
-    }
+
     document.getElementById(csv_input_id).addEventListener("change", handleFile, false);
     document.getElementById(clear_id).addEventListener("click", clearData, false);
-    document.getElementById(download_id).addEventListener("click", downloadData, false);
 }

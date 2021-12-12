@@ -1,0 +1,48 @@
+#input {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+#clear, #download_data_button {
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 15%;
+    height: 50px;
+    transition-duration: 0.4s;
+}
+#clear {
+    border: 2px solid orangered;
+    color: orangered;
+}
+#clear:hover {
+    background-color: orangered; /* Green */
+    color: white;
+}
+#download_data_button {
+    border: 2px solid dodgerblue;
+    color: dodgerblue;
+}
+#download_data_button:hover {
+    background-color: dodgerblue; /* Green */
+    color: white;
+}
+
+
+#table {
+    width: 70%;
+}
+#map {
+    width: 70%;
+    height: 400px
+}
+#info {
+    position:absolute;
+    right:0;
+    top:30px;
+    width: 30%;
+    font-size: 16px;
+}
