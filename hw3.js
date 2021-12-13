@@ -1,5 +1,6 @@
-export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id, download_id) {
-    const input_element = document.getElementById(csv_input_id);
+export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, clear_id, download_id) {
+    const dropzone_element = document.getElementById(dropzone_id);
+    const input_element = document.getElementById(input_id);
     const table_element = document.getElementById(table_id);
     const map_element = document.getElementById(map_id);
     const info_element = document.getElementById(info_id);
@@ -41,14 +42,12 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     function handleFile(file) {
         let cur_loc = undefined;
         let mouseup = undefined;
-        input_element.style.display = "none"
+        dropzone_element.style.display = "none"
         table_element.style.visibility = "visible"
         map_element.style.visibility = "visible"
         info_element.style.visibility = "visible"
         clear_element.style.visibility = "visible"
         download_element.style.visibility = "visible"
-        // const file = this.files[0];
-
 
         if (objectURL) {
             // revoke the old object url to avoid using more memory than needed
@@ -135,7 +134,8 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
     }
     function clearData(){
         input_element.value = ""
-        input_element.style.display = "block"
+        // input_element.style.display = "block"
+        dropzone_element.style.display = "block"
         table.clearData()
         table_element.style.visibility = "hidden"
         map_element.style.visibility = "hidden"
@@ -146,18 +146,27 @@ export function BuildElements(csv_input_id, table_id, map_id, info_id, clear_id,
         download_element.style.visibility = "hidden"
     }
 
-    input_element.addEventListener('dragover', function(e) {
+    dropzone_element.addEventListener('dragover', function(e) {
         e.stopPropagation();
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
-        input_element.style.background = '#c3d9a0';
+        dropzone_element.style.background = 'rgba(209,238,230,0.46)';
     });
-    input_element.addEventListener('drop', function (e){
-        input_element.style.background = '#fcfcfc';
+    dropzone_element.addEventListener('dragleave', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        dropzone_element.style.background = '#fcfcfc';
+    });
+    dropzone_element.addEventListener('drop', function (e){
+        dropzone_element.style.background = '#fcfcfc';
         e.stopPropagation();
         e.preventDefault();
         var file = e.dataTransfer.files[0];
         handleFile(file);
+    });
+    input_element.addEventListener("change", function (e){
+        const file = this.files[0];
+        handleFile(file)
     });
     clear_element.addEventListener("click", clearData, false);
 }

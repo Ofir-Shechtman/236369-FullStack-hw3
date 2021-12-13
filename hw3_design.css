@@ -8,11 +8,6 @@ body {
     min-width: 768px;
 }
 
-#input {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-}
 #clear, #download_data_button {
     padding: 15px 32px;
     text-align: center;
@@ -59,6 +54,7 @@ body {
     width: 35%;
     margin: 0 0 20px;
 }
+
 #info {
     position:absolute;
     right:0;
