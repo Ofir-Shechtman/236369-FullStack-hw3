@@ -1,20 +1,21 @@
 body {
     background-color: #eee;
     color: #222;
-    font-size: 16px;
+    font-size: 14px;
     height: 100%;
     line-height: 1.5em;
-    margin: 0;
+    margin: 10px 10px 10px;
     min-width: 768px;
 }
 
 #clear, #download_data_button {
-    padding: 15px 32px;
+    padding: 5px 5px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 8px;
+    margin: 5px 5px 5px;
     width: 15%;
     height: 50px;
     transition-duration: 0.4s;
@@ -38,27 +39,29 @@ body {
     color: white;
 }
 
-
 #table {
-    width: 75%;
+    width: 60%;
+    height: 40%;
 }
 #map {
-    width: 75%;
-    height: 400px
+    width: 60%;
+    height: 300px
 }
 #dropZone {
     background: #fcfcfc;
-    border: 3px solid #e3e3e3;
+    border: 3px solid #3c5cb2;
     padding: 30px;
     text-align: center;
+    font: 14px Arial, sans-serif;
     width: 35%;
-    margin: 0 0 20px;
+    border-radius: 8px;
+    margin: 20px 20px 20px;
 }
 
 #info {
     position:absolute;
-    right:0;
-    top:150px;
+    right:200px;
+    top:100px;
     width: 25%;
     font-size: 16px;
 
