@@ -164,7 +164,9 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
         e.stopPropagation();
         e.preventDefault();
         var file = e.dataTransfer.files[0];
-        handleFile(file);
+        if(file.name.endsWith('.csv')){
+            handleFile(file);
+        }
     });
     input_element.addEventListener("change", function (e){
         const file = this.files[0];
