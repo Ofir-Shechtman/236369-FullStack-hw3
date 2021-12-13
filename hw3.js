@@ -35,6 +35,7 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
         accessToken: 'pk.eyJ1Ijoib2ZpcjUxMTk5NiIsImEiOiJja3d6YmNzeG4wdXgxMm91cnQ4Y3NicWFuIn0.ajaFrHOpgyqznPKfD3cpJw'
     }).addTo(map);
     var markers_group = L.layerGroup();
+    let markers = {}
     var sel_icon = L.icon({iconUrl: 'icons/marker_sel.png'})
     var not_sel_icon = L.icon({iconUrl: 'icons/marker_not_sel.png', iconSize: [32, 32]})
 
@@ -83,7 +84,9 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
 
                 table.on("rowSelected", _rowSelected)
                 table.on("rowDeselected", _rowDeselected)
-
+                table.on("dataFiltered", function(filters, rows){
+                    setup_markers(rows, map)
+                });
                 function _moveMapHandler(event) {
                     var selectedData = table.getSelectedRows()
                     if (selectedData.length>0) {
@@ -92,14 +95,31 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
                     }
                 }
 
+
+
                 function _clickedMarkerHandler(event) {
-                    let id = markers[event.latlng.toString()].record["id"]
+                    let id = markers[event.latlng.toString()].row["id"]
                     let row = table.getRow(id)
                     let same_marker = row === mouseup
                     _moveMapHandler(event)
                     if (same_marker) return;
                     table.setPage(parseInt(row.getPosition(true)/paginationSize+1))
                     table.selectRow(parseInt(id))
+                }
+
+                function setup_markers(rows, map){
+                    markers_group.clearLayers();
+                    markers = {}
+                    for (let row of rows) {
+                        if(typeof row['getData'] === 'function'){
+                            row = row.getData()
+                        }
+                        let marker = L.marker([row.latitude, row.longitude], {title:row.name, riseOnHover:true, icon:not_sel_icon});
+                        markers_group.addLayer(marker)
+                        markers[marker._latlng.toString()] = {marker:marker, row:row}
+                        marker.on('click', _clickedMarkerHandler)
+                    }
+                    map.addLayer(markers_group);
                 }
 
                 function _mouseDown(event) {
@@ -123,17 +143,14 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
                 map.on('mousedown',_mouseDown)
                 map.on('mouseup',_mouseUp)
                 // map.on('movestart',_moveMapHandler)
-                let markers = {}
-                for (const record of results.data) {
-                    let marker = L.marker([record.latitude, record.longitude], {title:record.name, riseOnHover:true, icon:not_sel_icon});
-                    markers_group.addLayer(marker)
-                    markers[marker._latlng.toString()] = {marker:marker, record:record}
-                    marker.on('click', _clickedMarkerHandler)
-                }
-                map.addLayer(markers_group);
+                setup_markers(table.getData(), map)
             }
         });
     }
+
+
+
+
     function clearData(){
         input_element.value = ""
         // input_element.style.display = "block"
@@ -141,7 +158,6 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
         table.clearData()
         table_element.style.visibility = "hidden"
         map_element.style.visibility = "hidden"
-        markers_group.clearLayers();
         info_element.innerHTML = ""
         info_element.style.visibility = "hidden"
         clear_element.style.visibility = "hidden"
