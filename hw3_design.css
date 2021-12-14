@@ -8,7 +8,7 @@ body {
     min-width: 768px;
 }
 
-#clear, #download_data_button {
+button {
     padding: 5px 5px 5px;
     text-align: center;
     text-decoration: none;
@@ -19,23 +19,23 @@ body {
     width: 15%;
     height: 50px;
     transition-duration: 0.4s;
-}
-#clear {
     background: #fcfcfc;
+}
+
+#clear {
     border: 2px solid orangered;
     color: orangered;
 }
 #clear:hover {
-    background-color: orangered; /* Green */
+    background-color: orangered;
     color: white;
 }
 #download_data_button {
-    background: #fcfcfc;
     border: 2px solid dodgerblue;
     color: dodgerblue;
 }
 #download_data_button:hover {
-    background-color: dodgerblue; /* Green */
+    background-color: dodgerblue;
     color: white;
 }
 
@@ -58,6 +58,17 @@ body {
     border-radius: 8px;
     margin: 20px 20px 20px;
 }
+
+#submit{
+    border: 2px solid forestgreen;
+    color: forestgreen;
+}
+#submit:hover {
+    background-color: forestgreen; /* Green */
+    color: white;
+}
+
+
 
 #info {
     position:absolute;

@@ -1,17 +1,18 @@
 export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, clear_id, download_id) {
     const dropzone_element = document.getElementById(dropzone_id);
+    const submit = document.getElementById('submit');
     const input_element = document.getElementById(input_id);
     const table_element = document.getElementById(table_id);
     const map_element = document.getElementById(map_id);
     const info_element = document.getElementById(info_id);
     const clear_element = document.getElementById(clear_id);
     const download_element = document.getElementById(download_id);
+    let file;
     let objectURL;
     const paginationSize = 10
     let table = new Tabulator(table_element, {
         index: "id",
         selectable:1,
-        downloadRowRange: "all",
         layout:"fitDataStretch",
         height: 300,
         pagination: "local",
@@ -179,13 +180,18 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
         dropzone_element.style.background = '#fcfcfc';
         e.stopPropagation();
         e.preventDefault();
-        var file = e.dataTransfer.files[0];
-        if(file.name.endsWith('.csv')){
-            handleFile(file);
+        var myfile = e.dataTransfer.files[0]
+        if(myfile.name.endsWith('.csv')){
+            input_element.files = e.dataTransfer.files
+            input_element.dispatchEvent(new Event('change'));
+
         }
     });
     input_element.addEventListener("change", function (e){
-        const file = this.files[0];
+        file = this.files[0];
+        submit.style.visibility="visible"
+    });
+    submit.addEventListener("click", function (e){
         handleFile(file)
     });
     clear_element.addEventListener("click", clearData, false);
