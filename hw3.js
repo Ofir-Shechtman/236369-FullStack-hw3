@@ -13,12 +13,13 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
     let table = new Tabulator(table_element, {
         index: "id",
         selectable:1,
-        layout:"fitDataStretch",
         height: 300,
+        layout:"fitData",
         pagination: "local",
+        placeholder:"No Data Available",
         paginationSize: paginationSize,
         columns: [
-            {title: "Name", field: "name", width: 150, headerFilter:"input"},
+            {title: "Name", field: "name", headerFilter:"input"},
             {title: "Host ID", field: "host_id", width: 150},
             {title: "ID", field: "id", width: 150},
             {title: "Neighborhood", field: "neighbourhood", width: 150},
@@ -72,8 +73,7 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
                     let latlng =L.latLng(row.getData().latitude, row.getData().longitude)
                     map.flyTo(latlng,15,{noMoveStart:true})
                     markers[latlng.toString()].marker.setIcon(sel_icon)
-                    let strung = JSON.stringify(row.getData(), undefined, '\t');
-                    info_element.innerHTML = strung.substring(1,strung.length-1);
+                    info_element.innerHTML = JSON.stringify(row.getData(), undefined, '\t')//.substring(1,strung.length-1);
 
                 }
 
@@ -153,16 +153,17 @@ export function BuildElements(dropzone_id, input_id, table_id, map_id, info_id, 
 
 
     function clearData(){
-        input_element.value = ""
-        // input_element.style.display = "block"
-        dropzone_element.style.display = "block"
         table.clearData()
+        input_element.value = ""
         table_element.style.visibility = "hidden"
         map_element.style.visibility = "hidden"
         info_element.innerHTML = ""
         info_element.style.visibility = "hidden"
         clear_element.style.visibility = "hidden"
         download_element.style.visibility = "hidden"
+        submit.style.visibility = "hidden"
+
+        dropzone_element.style.display = "block"
     }
 
     dropzone_element.addEventListener('dragover', function(e) {

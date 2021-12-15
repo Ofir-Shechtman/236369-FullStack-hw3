@@ -17,13 +17,20 @@
 <div id="dropZone" style="display: block;">
     Drop your csv or
     <input id="input" type="file" accept=".csv">
-    <button id="submit" style="visibility: hidden;"> Submit</button>
+    <button class="button" id="submit" style="visibility: hidden;"> Submit</button>
 </div>
-<button id="clear" style="visibility: hidden;">Clear</button>
-<a id="download_data" download style="visibility: hidden;"><button id="download_data_button"> Download Data</button></a>
-<div id="table" style="visibility: hidden;"></div>
-<div id="map" style="visibility: hidden;"></div>
-<pre><code id="info"></code></pre>
+<div id="buttons">
+    <button class="button" id="clear" style="visibility: hidden;">Clear</button>
+    <a id="download_data" download style="visibility: hidden;"><button class="button" id="download_data_button"> Download Data</button></a>
+</div>
+<div id="main">
+    <div id="tablemap">
+        <div id="table" style="visibility: hidden;"></div>
+        <div id="map" style="visibility: hidden;"></div>
+    </div>
+    <pre><code id="info"></code></pre>
+</div>
+
 
 
 <script type="module">
